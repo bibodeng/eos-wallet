@@ -102,26 +102,46 @@ class HDNode {
     })
   }
 
-  async generateTransaction ({ from, to, amount, memo, refBlockNum, refBlockPrefix, expiration, symbol }) {
+  async generateTransaction ({
+    from,
+    to,
+    amount,
+    memo,
+    refBlockNum,
+    refBlockPrefix,
+    expiration,
+    symbol
+  }) {
     // offline mode eosjs
     const eosjsInstance = this.getInstance(expiration, refBlockNum, refBlockPrefix)
     const trx = await eosjsInstance.transfer(from, to, toEOSAmount(amount, symbol), memo)
     return trx
   }
 
-  async registerAccount ({ accountName, refBlockNum, refBlockPrefix, expiration, creator, stakeAmount = 10000, symbol }) {
+  async registerAccount ({
+    accountName,
+    refBlockNum,
+    refBlockPrefix,
+    expiration,
+    creator,
+    stakeAmount = 1000,
+    symbol,
+    ownerKey,
+    activeKey
+  }) {
     const eosjsInstance = this.getInstance(expiration, refBlockNum, refBlockPrefix)
     const res = await eosjsInstance.transaction(tr => {
       tr.newaccount({
         creator,
         name: accountName,
-        owner: this.getPublicKey(),
-        active: this.getPublicKey()
+        owner: ownerKey || this.getPublicKey(),
+        active: activeKey || this.getPublicKey()
       })
       tr.buyrambytes({
         payer: creator,
         receiver: accountName,
-        bytes: 8192
+        // hardcode 4KB ram
+        bytes: 1024 * 4
       })
       tr.delegatebw({
         from: creator,
@@ -134,7 +154,16 @@ class HDNode {
     return res
   }
 
-  async delegate ({ from, to, cpuAmount, netAmount, refBlockNum, refBlockPrefix, expiration, symbol }) {
+  async delegate ({
+    from,
+    to,
+    cpuAmount,
+    netAmount,
+    refBlockNum,
+    refBlockPrefix,
+    expiration,
+    symbol
+  }) {
     const eosjsInstance = this.getInstance(expiration, refBlockNum, refBlockPrefix)
     const res = await eosjsInstance.transaction(tr => {
       tr.delegatebw({
@@ -148,7 +177,16 @@ class HDNode {
     return res
   }
 
-  async undelegate ({ from, to, cpuAmount, netAmount, refBlockNum, refBlockPrefix, expiration, symbol }) {
+  async undelegate ({
+    from,
+    to,
+    cpuAmount,
+    netAmount,
+    refBlockNum,
+    refBlockPrefix,
+    expiration,
+    symbol
+  }) {
     const eosjsInstance = this.getInstance(expiration, refBlockNum, refBlockPrefix)
     const res = await eosjsInstance.transaction(tr => {
       tr.undelegatebw({
@@ -165,6 +203,34 @@ class HDNode {
   async vote ({ from, producers, refBlockNum, refBlockPrefix, expiration }) {
     const eosjsInstance = this.getInstance(expiration, refBlockNum, refBlockPrefix)
     const res = await eosjsInstance.voteproducer(from, '', producers)
+    return res
+  }
+
+  async bidname ({ bidder, name, amount, refBlockNum, refBlockPrefix, expiration }) {
+    const eosjsInstance = this.getInstance(expiration, refBlockNum, refBlockPrefix)
+    const res = await eosjsInstance.transaction(tr => {
+      tr.bidname({
+        bidder,
+        newname: name,
+        bid: toEOSAmount(amount)
+      })
+    })
+    return res
+  }
+
+  async buyram ({ payer, receiver, bytes, expiration, refBlockNum, refBlockPrefix }) {
+    const eosjsInstance = this.getInstance(expiration, refBlockNum, refBlockPrefix)
+    const res = await eosjsInstance.transaction(tr => {
+      tr.buyrambytes({ payer, receiver, bytes })
+    })
+    return res
+  }
+
+  async sellram ({ account, bytes, expiration, refBlockNum, refBlockPrefix }) {
+    const eosjsInstance = this.getInstance(expiration, refBlockNum, refBlockPrefix)
+    const res = await eosjsInstance.transaction(tr => {
+      tr.sellram({ account, bytes })
+    })
     return res
   }
 }

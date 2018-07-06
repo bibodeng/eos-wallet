@@ -5,6 +5,11 @@ const HDNode = require('../dist/index.cjs.js')
 const mnemonic = 'cobo wallet is awesome'
 const seed = bip39.mnemonicToSeedHex(mnemonic)
 
+const randomName = () => {
+  const name = String(Math.round(Math.random() * 1000000000)).replace(/[0,6-9]/g, '')
+  return 'a' + name + '111222333444'.substring(0, 11 - name.length) // always 12 in length
+}
+
 describe('EOS HDNode', function () {
   it('Can import from seed and get EOS address', () => {
     const node = HDNode.fromMasterSeed(seed)
@@ -83,7 +88,7 @@ describe('With jungle testnet, real blockchain methods', () => {
   let refBlockNum, refBlockPrefix, provider, node
   before(async () => {
     provider = Eos({
-      httpEndpoint: 'http://bp4-d3.eos42.io:8888',
+      httpEndpoint: 'http://79.137.175.6:8888',
       chainId: '038f4b0fc8ff18a4f0842a8f0564611f6e96e8535901dd45e43ac8691a1c4dca'
     })
     const latestBlock = await provider.getInfo({})
@@ -97,10 +102,6 @@ describe('With jungle testnet, real blockchain methods', () => {
   })
 
   it('Can create account use a pubkey', async () => {
-    const randomName = () => {
-      const name = String(Math.round(Math.random() * 1000000000)).replace(/[0,6-9]/g, '')
-      return 'a' + name + '111222333444'.substring(0, 11 - name.length) // always 12 in length
-    }
     const accountName = randomName()
     const { transaction } = await node.registerAccount({
       refBlockNum,
@@ -165,5 +166,37 @@ describe('With jungle testnet, real blockchain methods', () => {
     const { transaction } = rawTx
     const res = await provider.pushTransaction(transaction)
     return res
+  })
+
+  it('Can bid name', async () => {
+    const rawTx = await node.bidname({
+      bidder: 'cobowalletaa',
+      name: randomName().substr(0, 10),
+      amount: 10000,
+      refBlockNum,
+      refBlockPrefix
+    })
+    const { transaction } = rawTx
+    const res = await provider.pushTransaction(transaction)
+    return res
+  })
+
+  it('Can buy ram and sell ram', async () => {
+    const buyRamTx = await node.buyram({
+      payer: 'cobowalletaa',
+      receiver: 'cobowalletaa',
+      bytes: 1024,
+      refBlockNum,
+      refBlockPrefix
+    })
+    const sellRamTx = await node.sellram({
+      account: 'cobowalletaa',
+      bytes: 500,
+      refBlockNum,
+      refBlockPrefix
+    })
+    const buyRes = await provider.pushTransaction(buyRamTx.transaction)
+    const sellRes = await provider.pushTransaction(sellRamTx.transaction)
+    return { buyRes, sellRes }
   })
 })
