@@ -5,3 +5,5 @@ coverage
 yarn-error.log
 .nyc_output
 package-lock.json
+n.js
+name.js
