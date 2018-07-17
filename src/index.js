@@ -126,7 +126,9 @@ class HDNode {
     refBlockPrefix,
     expiration,
     creator,
-    stakeAmount = 1000,
+    stakeAmountCpu = 1000,
+    stakeAmountNet = 1000,
+    bytes = 4000,
     symbol,
     ownerKey,
     activeKey
@@ -143,13 +145,13 @@ class HDNode {
         payer: creator,
         receiver: accountName,
         // hardcode 4KB ram
-        bytes: 1024 * 4
+        bytes
       })
       tr.delegatebw({
         from: creator,
         receiver: accountName,
-        stake_net_quantity: toEOSAmount(stakeAmount, symbol),
-        stake_cpu_quantity: toEOSAmount(stakeAmount, symbol),
+        stake_net_quantity: toEOSAmount(stakeAmountCpu, symbol),
+        stake_cpu_quantity: toEOSAmount(stakeAmountNet, symbol),
         transfer: 0
       })
     }, { broadcast: false, sign: true })
