@@ -88,7 +88,7 @@ describe('With jungle testnet, real blockchain methods', () => {
   let refBlockNum, refBlockPrefix, provider, node
   before(async () => {
     provider = Eos({
-      httpEndpoint: 'http://79.137.175.6:8888',
+      httpEndpoint: 'http://jungle.cryptolions.io:18888',
       chainId: '038f4b0fc8ff18a4f0842a8f0564611f6e96e8535901dd45e43ac8691a1c4dca'
     })
     const latestBlock = await provider.getInfo({})
