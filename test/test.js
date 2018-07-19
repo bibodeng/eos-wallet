@@ -107,6 +107,7 @@ describe('With jungle testnet, real blockchain methods', () => {
       refBlockNum,
       refBlockPrefix,
       accountName,
+      activeKey: 'EOS6ZvUJcxVr2mqFqkRWg1tt6LSmUB5zNSiWKcjxyUbDYUKbrFjQL',
       creator: 'cobowalletaa'
     })
     console.log('Created account, name is: ', accountName)

@@ -150,8 +150,8 @@ class HDNode {
       tr.delegatebw({
         from: creator,
         receiver: accountName,
-        stake_net_quantity: toEOSAmount(stakeAmountCpu, symbol),
-        stake_cpu_quantity: toEOSAmount(stakeAmountNet, symbol),
+        stake_net_quantity: toEOSAmount(stakeAmountNet, symbol),
+        stake_cpu_quantity: toEOSAmount(stakeAmountCpu, symbol),
         transfer: 0
       })
     }, { broadcast: false, sign: true })
