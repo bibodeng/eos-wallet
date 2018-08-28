@@ -200,4 +200,19 @@ describe('With jungle testnet, real blockchain methods', () => {
     const sellRes = await provider.pushTransaction(sellRamTx.transaction)
     return { buyRes, sellRes }
   })
+
+  it('Can sign and transfer EOS tokens', async () => {
+    const rawTx = await node.generateTransaction({
+      from: 'cobowalletaa',
+      to: 'liukailiukai',
+      amount: 10000,
+      memo: 'cobo wallet is awesome',
+      symbol: 'JUNGLE',
+      refBlockNum,
+      refBlockPrefix
+    })
+    const { transaction } = rawTx
+    const res = await provider.pushTransaction(transaction)
+    return res
+  })
 })

@@ -85,13 +85,8 @@ class HDNode {
   getInstance (expiration, refBlockNum, refBlockPrefix) {
     const headers = {
       expiration: getExpiration(expiration),
-      region: 0,
       ref_block_num: refBlockNum,
-      ref_block_prefix: refBlockPrefix,
-      net_usage_words: 0,
-      max_cpu_usage_ms: 0,
-      delay_sec: 0,
-      context_free_actions: []
+      ref_block_prefix: refBlockPrefix
     }
     const privateKey = this.getPrivateKey()
     return eos({

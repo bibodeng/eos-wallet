@@ -1,18 +1,18 @@
 {
   "name": "@cobo/eos",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
   "browser": "dist/index.umd.js",
   "react-native": "dist/index.esm.js",
   "dependencies": {
-    "bip39": "^2.5.0",
-    "eosjs": "^15.0.3",
-    "eosjs-ecc": "^4.0.2",
-    "hdkey": "^0.8.0",
-    "safe-buffer": "^5.1.1",
-    "secp256k1": "^3.5.0",
-    "wif": "^2.0.6"
+    "bip39": "2.5.0",
+    "eosjs": "16.0.6",
+    "eosjs-ecc": "4.0.4",
+    "hdkey": "0.8.0",
+    "safe-buffer": "5.1.1",
+    "secp256k1": "3.5.0",
+    "wif": "2.0.6"
   },
   "devDependencies": {
     "coveralls": "^3.0.0",
@@ -31,7 +31,6 @@
     "build": "rollup -c",
     "dev": "rollup -c -w",
     "test": "npm run lint && npm run build && mocha --timeout 5000",
-    "test:local": "cd docker && ./up.sh && cd .. && npm run lint && npm run build && mocha",
     "coverage": "nyc --reporter=html --reporter=text mocha",
     "coveralls": "npm run coverage && nyc report --reporter=text-lcov | coveralls",
     "prepare": "npm run build"
